@@ -1,0 +1,24 @@
+model Payment {
+  id String @id @default(uuid())
+
+  rentalRequestId String        @unique
+  rentalRequest   RentalRequest @relation(fields: [rentalRequestId], references: [id], onDelete: Cascade)
+
+  amount Decimal       @db.Decimal(10, 2)
+  status PaymentStatus @default(PENDING)
+
+  // stripe related ids
+
+  // stripe checkout session id (created when tenant starts payment)
+  stripeCheckoutSessionId String @unique
+
+  // stripe payment intent id (filled in once payment actually completes)
+  stripePaymentIntentId String? @unique
+
+  paidAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payments")
+}
