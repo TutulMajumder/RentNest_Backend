@@ -4,6 +4,8 @@ import { ILoginUser, IRegisterUser } from "./auth.interface";
 import config from "../../config";
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 import { jwtUtils } from "../../utils/jwt";
+import { AppError } from "../../utils/appError";
+import httpStatus from "http-status";
 
 const registerUserIntoDb = async (payload: IRegisterUser) => {
   const { name, email, password, phone, role } = payload;
@@ -13,12 +15,18 @@ const registerUserIntoDb = async (payload: IRegisterUser) => {
   });
 
   if (isUserExist) {
-    throw new Error("User with this email already exists");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "User with this email already exists",
+    );
   }
 
-  // if (role !== "TENANT" && role !== "LANDLORD") {
-  //   throw new Error("Invalid role. Must be TENANT or LANDLORD.");
-  // }
+  if (role !== "TENANT" && role !== "LANDLORD") {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Invalid role. Must be TENANT or LANDLORD.",
+    );
+  }
 
   const hashedPassword = await bcrypt.hash(
     password,
@@ -58,13 +66,16 @@ const loginUser = async (payload: ILoginUser) => {
   });
 
   if (user.status === "BLOCKED") {
-    throw new Error("Your account has been blocked. Please contact support.");
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Your account has been blocked. Please contact support.",
+    );
   }
 
   const isPasswordMatched = await bcrypt.compare(password, user.password);
 
   if (!isPasswordMatched) {
-    throw new Error("Password is incorrect");
+    throw new AppError(httpStatus.UNAUTHORIZED, "Password is incorrect");
   }
 
   const jwtPayload = {
@@ -106,7 +117,10 @@ const refreshToken = async (refreshToken: string) => {
   });
 
   if (user.status === "BLOCKED") {
-    throw new Error("Your account has been blocked. Please contact support.");
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Your account has been blocked. Please contact support.",
+    );
   }
 
   const jwtPayload = {

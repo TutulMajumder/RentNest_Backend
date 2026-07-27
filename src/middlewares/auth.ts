@@ -5,6 +5,8 @@ import { jwtUtils } from "../utils/jwt";
 import config from "../config";
 import { JwtPayload } from "jsonwebtoken";
 import { prisma } from "../lib/prisma";
+import { AppError } from "../utils/appError";
+import httpStatus from "http-status";
 
 declare global {
   namespace Express {
@@ -42,7 +44,10 @@ export const auth = (...requiredRoles: Role[]) => {
     const { email, name, id, phone, role } = verifiedToken.data as JwtPayload;
 
     if (requiredRoles.length && !requiredRoles.includes(role)) {
-      throw new Error("Forbidden. You don't have permission to access.");
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "Forbidden. You don't have permission to access.",
+      );
     }
     const user = await prisma.user.findUnique({
       where: {
@@ -51,7 +56,10 @@ export const auth = (...requiredRoles: Role[]) => {
     });
 
     if (!user) {
-      throw new Error("User not found. Please log in again.");
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        "User not found. Please log in again.",
+      );
     }
 
     if (user.status === "BLOCKED") {
