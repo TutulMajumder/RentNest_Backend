@@ -5,6 +5,8 @@ import { authRoutes } from "./modules/auth/auth.route";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 import { notFound } from "./middlewares/notFound";
 import cookieParser from "cookie-parser";
+import { categoryRoutes } from "./modules/categories/category.route";
+import { propertyRoutes } from "./modules/properties/property.route";
 
 const app: Application = express();
 
@@ -22,6 +24,9 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api", propertyRoutes);
+app.use("/api/categories", categoryRoutes);
+
 app.use(notFound);
 app.use(globalErrorHandler);
 

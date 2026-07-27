@@ -16,9 +16,9 @@ const registerUserIntoDb = async (payload: IRegisterUser) => {
     throw new Error("User with this email already exists");
   }
 
-  if (role !== "TENANT" && role !== "LANDLORD") {
-    throw new Error("Invalid role. Must be TENANT or LANDLORD.");
-  }
+  // if (role !== "TENANT" && role !== "LANDLORD") {
+  //   throw new Error("Invalid role. Must be TENANT or LANDLORD.");
+  // }
 
   const hashedPassword = await bcrypt.hash(
     password,
