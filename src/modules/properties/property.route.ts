@@ -5,14 +5,22 @@ import { propertyController } from "./property.controller";
 
 const router = Router();
 
-// router.get("/");
-// router.get("/:id");
+router.get("/properties", propertyController.findAllProperty);
+router.get("/properties/:id", propertyController.findPropertyById);
 router.post(
   "/landlord/properties",
   auth(Role.LANDLORD),
   propertyController.createProperty,
 );
-// router.put("/landlord/properties/:id");
-// router.delete("/landlord/properties/:id");
+router.put(
+  "/landlord/properties/:id",
+  auth(Role.LANDLORD),
+  propertyController.updateProperty,
+);
+router.delete(
+  "/landlord/properties/:id",
+  auth(Role.LANDLORD),
+  propertyController.deleteProperty,
+);
 
 export const propertyRoutes = router;

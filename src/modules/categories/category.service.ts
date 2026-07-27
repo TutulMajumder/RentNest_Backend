@@ -20,7 +20,7 @@ const createCategoryToDB = async (payload: ICreateCategory) => {
   });
 
   if (isCategoryExist) {
-    throw new Error(`Category already exist`);
+    throw new AppError(httpStatus.CONFLICT, "Category already exist");
   }
 
   const slug = slugify(name, { lower: true, strict: true });
@@ -122,10 +122,13 @@ const updateCategoryToDB = async (id: string, payload: IUpdateCategory) => {
   });
 
   if (!isCategoryExist) {
-    throw new Error(`Category not exist`);
+    throw new AppError(httpStatus.NOT_FOUND, "Category not found");
   }
   if (!isCategoryExist.isActive && isActive !== true) {
-    throw new Error("Category is deleted. Reactivate it first.");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Category is deleted. Reactivate it first.",
+    );
   }
 
   const data: CategoryUpdateInput = {};
@@ -137,7 +140,7 @@ const updateCategoryToDB = async (id: string, payload: IUpdateCategory) => {
       },
     });
     if (isDuplicateCategory && isDuplicateCategory.id !== id) {
-      throw new Error(`Category ${name} already exists`);
+      throw new AppError(httpStatus.CONFLICT, "Category already exist");
     }
     data.name = name;
     data.slug = slugify(name, { lower: true, strict: true });
@@ -167,10 +170,10 @@ const deleteCategoryFromDB = async (id: string) => {
   });
 
   if (!isCategoryExist) {
-    throw new Error(`Category not exist`);
+    throw new AppError(httpStatus.NOT_FOUND, "Category not exist");
   }
   if (!isCategoryExist.isActive) {
-    throw new Error("Category is already deleted");
+    throw new AppError(httpStatus.BAD_REQUEST, "Category is already deleted");
   }
   await prisma.category.update({
     where: {

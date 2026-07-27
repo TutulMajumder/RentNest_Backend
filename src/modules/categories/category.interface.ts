@@ -11,7 +11,6 @@ export interface ICategoryQuery extends CategoryWhereInput {
   limit?: string;
   sortOrder?: string;
   sortBy?: string;
-  includeInactive?: string;
 }
 
 export interface IUpdateCategory {

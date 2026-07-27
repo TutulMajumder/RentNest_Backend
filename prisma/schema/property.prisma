@@ -13,11 +13,12 @@ model Property {
   amenities          String[]
   images             String[]
   availabilityStatus AvailabilityStatus @default(AVAILABLE)
+  isActive           Boolean            @default(true)
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @updatedAt
 
   landlordId String
-  landlord   User   @relation("LandlordProperties", fields: [landlordId], references: [id], onDelete: Cascade)
+  landlord   User   @relation("LandlordProperties", fields: [landlordId], references: [id], onDelete: Restrict)
 
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
