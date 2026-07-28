@@ -155,6 +155,7 @@ const findAllPropertyFromDB = async (query: IPropertyQuery) => {
       availabilityStatus: query.availabilityStatus as AvailabilityStatus,
     });
   }
+
   const properties = await prisma.property.findMany({
     where: {
       isActive: true,

@@ -7,6 +7,7 @@ import { notFound } from "./middlewares/notFound";
 import cookieParser from "cookie-parser";
 import { categoryRoutes } from "./modules/categories/category.route";
 import { propertyRoutes } from "./modules/properties/property.route";
+import { rentalRequestsRoutes } from "./modules/rentalRequests/rentalRequests.route";
 
 const app: Application = express();
 
@@ -26,7 +27,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/api/auth", authRoutes);
 app.use("/api", propertyRoutes);
 app.use("/api/categories", categoryRoutes);
-
+app.use("/api", rentalRequestsRoutes);
 app.use(notFound);
 app.use(globalErrorHandler);
 

@@ -9,10 +9,10 @@ model RentalRequest {
   updatedAt   DateTime     @updatedAt
 
   tenantId String
-  tenant   User   @relation("TenantRentalRequests", fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant   User   @relation("TenantRentalRequests", fields: [tenantId], references: [id], onDelete: Restrict)
 
   propertyId String
-  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Restrict)
 
   payment Payment?
   review  Review?
