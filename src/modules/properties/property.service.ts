@@ -26,7 +26,7 @@ const createPropertyToDB = async (
   const isDuplicate = await prisma.property.findFirst({
     where: {
       landlordId,
-      categoryId: payload.title,
+      title: payload.title,
       address: payload.address,
     },
   });

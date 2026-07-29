@@ -11,3 +11,10 @@ export interface ILoginUser {
   email: string;
   password: string;
 }
+
+export interface IUpdateProfile {
+  name?: string;
+  phone?: string;
+  oldPassword?: string;
+  newPassword?: string;
+}
