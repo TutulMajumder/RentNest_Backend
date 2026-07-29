@@ -5,13 +5,13 @@ model Review {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tenantId  String
-  tenant    User     @relation("TenantReviews", fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant    User     @relation("TenantReviews", fields: [tenantId], references: [id], onDelete: Restrict)
 
   propertyId String
   property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   rentalRequestId String        @unique
-  rentalRequest   RentalRequest @relation(fields: [rentalRequestId], references: [id], onDelete: Cascade)
+  rentalRequest   RentalRequest @relation(fields: [rentalRequestId], references: [id], onDelete: Restrict)
 
   @@index([propertyId])
   @@map("reviews")
