@@ -1,3 +1,4 @@
+import { RentalStatus } from "../../../generated/prisma/enums";
 import { RentalRequestWhereInput } from "../../../generated/prisma/models";
 
 export interface ICreateRentalRequest {
@@ -14,5 +15,5 @@ export interface IRentalRequestQuery extends RentalRequestWhereInput {
   searchTerm?: string;
 }
 export interface IUpdateRentalRequestStatus {
-  status: "APPROVED" | "REJECTED";
+  status: RentalStatus;
 }
