@@ -11,6 +11,7 @@ enum ActiveStatus {
 
 enum AvailabilityStatus {
   AVAILABLE
+  PENDING_PAYMENT
   UNAVAILABLE
   RENTED
 }
@@ -28,5 +29,4 @@ enum PaymentStatus {
   PENDING
   COMPLETED
   FAILED
-  REFUNDED
 }

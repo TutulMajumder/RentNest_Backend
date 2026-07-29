@@ -11,6 +11,7 @@ import {
   IUpdateRentalRequestStatus,
 } from "./rentalRequests.interface";
 import httpStatus from "http-status";
+import { RentalStatus } from "../../../generated/prisma/enums";
 
 const createRentalRequestIntoDB = async (
   tenantId: string,
@@ -250,20 +251,34 @@ const updateRentalRequest = async (
     throw new AppError(httpStatus.NOT_FOUND, "Rental request not found");
   }
 
-  if (
-    isRentalRequestExist.property.landlordId &&
-    isRentalRequestExist.property.landlordId !== landlordId
-  ) {
+  if (isRentalRequestExist.property.landlordId !== landlordId) {
     throw new AppError(
       httpStatus.FORBIDDEN,
       "You are not allowed to respond to this rental request",
     );
   }
-  if (isRentalRequestExist.status !== "PENDING") {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      `This request has already been ${isRentalRequestExist.status.toLowerCase()} and cannot be changed`,
-    );
+  switch (isRentalRequestExist.status) {
+    case "PENDING":
+      if (status !== "APPROVED" && status !== "REJECTED") {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          `Cannot change status from PENDING to ${status}`,
+        );
+      }
+      break;
+    case "ACTIVE":
+      if (status !== "COMPLETED") {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          `Cannot change status from ACTIVE to ${status}`,
+        );
+      }
+      break;
+    default:
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        `Cannot change status from ${isRentalRequestExist.status}`,
+      );
   }
 
   const result = await prisma.$transaction(async (tx) => {
@@ -279,8 +294,14 @@ const updateRentalRequest = async (
           id: isRentalRequestExist.propertyId,
         },
         data: {
-          availabilityStatus: "RENTED",
+          availabilityStatus: "PENDING_PAYMENT",
         },
+      });
+    }
+    if (status === "COMPLETED") {
+      await tx.property.update({
+        where: { id: isRentalRequestExist.propertyId },
+        data: { availabilityStatus: "AVAILABLE" },
       });
     }
     return updateRentalRequest;
