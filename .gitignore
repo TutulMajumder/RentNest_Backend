@@ -3,6 +3,5 @@ node_modules
 dist
 generated
 /generated/prisma
-src/modules/admin
 
 RestNest.postman_collection.json
