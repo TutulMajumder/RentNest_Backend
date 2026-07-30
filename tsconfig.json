@@ -1,13 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "commonjs",
     "target": "ES2023",
     "types": ["node"],
     "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
     "noUncheckedIndexedAccess": true,
     "strict": true,
     "isolatedModules": true,
