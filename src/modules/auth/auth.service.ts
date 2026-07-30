@@ -22,12 +22,6 @@ const registerUserIntoDb = async (payload: IRegisterUser) => {
     );
   }
 
-  if (role !== "TENANT" && role !== "LANDLORD") {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "Invalid role. Must be TENANT or LANDLORD.",
-    );
-  }
 
   const hashedPassword = await bcrypt.hash(
     password,
